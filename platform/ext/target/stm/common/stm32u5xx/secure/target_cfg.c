@@ -81,6 +81,14 @@ const struct memory_region_limits memory_regions =
 #define PERIPHERALS_BASE_NS_START (PERIPH_BASE_NS)
 #define PERIPHERALS_BASE_NS_END   (0x4FFFFFFF)
 
+/* SAU region 5 (periph2) bounds — overridable via compile definitions */
+#ifndef SAU_NS_PERIPH2_BASE
+#define SAU_NS_PERIPH2_BASE  PACKAGE_BASE
+#endif
+#ifndef SAU_NS_PERIPH2_LIMIT
+#define SAU_NS_PERIPH2_LIMIT (PACKAGE_BASE + 0xfff)
+#endif
+
 const struct sau_cfg_t sau_init_cfg[] = {
     /* Configures SAU regions to be non-secure */
     {
@@ -148,8 +156,8 @@ const struct sau_cfg_t sau_init_cfg[] = {
     /* Configure the peripherals space 2 to access package information */
     {
         TFM_NS_REGION_PERIPH_2,
-        PACKAGE_BASE,
-        (PACKAGE_BASE + 0xfff),
+        SAU_NS_PERIPH2_BASE,
+        SAU_NS_PERIPH2_LIMIT,
         TFM_FALSE,
 #ifdef FLOW_CONTROL
         FLOW_STEP_SAU_EN_R5,
